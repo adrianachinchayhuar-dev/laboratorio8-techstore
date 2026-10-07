@@ -250,7 +250,8 @@ const loginUsuario = async (req, res) => {
             {
                 id: usuario.id,
                 email: usuario.email,
-                rol: usuario.rol
+                rol: usuario.rol,
+                mfa_habilitado: Boolean(usuario.mfa_habilitado)
             },
             process.env.JWT_SECRET,
             {
@@ -270,7 +271,8 @@ const loginUsuario = async (req, res) => {
                 nombre_completo:
                     usuario.nombre_completo,
                 tienda: usuario.tienda,
-                rol: usuario.rol
+                rol: usuario.rol,
+                mfa_habilitado: Boolean(usuario.mfa_habilitado)
             }
         });
 
@@ -594,7 +596,8 @@ const verificarMFA = async (req, res) => {
             {
                 id: usuario.id,
                 email: usuario.email,
-                rol: usuario.rol
+                rol: usuario.rol,
+                mfa_habilitado: Boolean(usuario.mfa_habilitado)
             },
             process.env.JWT_SECRET,
             {
@@ -623,7 +626,9 @@ const verificarMFA = async (req, res) => {
                     usuario.tienda,
 
                 rol:
-                    usuario.rol
+                    usuario.rol,
+                mfa_habilitado:
+                    Boolean(usuario.mfa_habilitado)
             }
         });
 

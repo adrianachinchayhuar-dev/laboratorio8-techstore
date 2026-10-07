@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.hash.slice(1)); const oauthToken = params.get('token_temporal'); if (oauthToken) { saveTemporaryToken(oauthToken); window.history.replaceState({}, document.title, 'mfa.html'); }
   const token = getTemporaryToken(); if (!token) { window.location.href = 'login.html'; return; }
   const form = document.querySelector('#mfaForm'); const input = document.querySelector('#codigo'); const button = document.querySelector('#submitBtn'); const attempts = document.querySelector('#attempts'); input.focus();
   input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(0, 6); }); document.querySelector('#backBtn').addEventListener('click', () => { clearSession(); window.location.href = 'login.html'; });
