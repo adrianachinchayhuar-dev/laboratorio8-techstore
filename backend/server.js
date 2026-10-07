@@ -5,13 +5,16 @@ require("dotenv").config();
 const db = require("./src/config/database");
 const authRoutes = require("./src/routes/authRoutes");
 
+const protectedRoutes =
+    require("./src/routes/protectedRoutes");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
-
+app.use("/api", protectedRoutes);
 
 
 app.get("/", (req, res) => {
