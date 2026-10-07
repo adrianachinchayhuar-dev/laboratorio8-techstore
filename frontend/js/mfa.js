@@ -1,0 +1,6 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const token = getTemporaryToken(); if (!token) { window.location.href = 'login.html'; return; }
+  const form = document.querySelector('#mfaForm'); const input = document.querySelector('#codigo'); const button = document.querySelector('#submitBtn'); const attempts = document.querySelector('#attempts'); input.focus();
+  input.addEventListener('input', () => { input.value = input.value.replace(/\D/g, '').slice(0, 6); }); document.querySelector('#backBtn').addEventListener('click', () => { clearSession(); window.location.href = 'login.html'; });
+  form.addEventListener('submit', async event => { event.preventDefault(); if (!/^\d{6}$/.test(input.value)) return showAlert('#formAlert', 'Ingresa un código de exactamente 6 dígitos.'); setLoading(button, true); try { const data = await apiFetch('/auth/mfa/verificar', { method: 'POST', auth: false, body: JSON.stringify({ codigo: input.value, token_temporal: token }) }); saveToken(data.token); saveUser(data.usuario); window.location.href = 'dashboard.html'; } catch (error) { if (error.data?.intentos_restantes !== undefined) attempts.textContent = error.data.intentos_restantes; showAlert('#formAlert', error.message); input.select(); } finally { setLoading(button, false); } });
+});

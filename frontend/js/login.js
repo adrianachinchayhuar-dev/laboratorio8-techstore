@@ -1,0 +1,6 @@
+document.addEventListener('DOMContentLoaded', () => {
+  redirectIfAuthenticated();
+  const form = document.querySelector('#loginForm'); const password = document.querySelector('#password'); const toggle = document.querySelector('.password-toggle'); const button = document.querySelector('#submitBtn');
+  toggle?.addEventListener('click', () => { const visible = password.type === 'text'; password.type = visible ? 'password' : 'text'; toggle.innerHTML = `<i class="bi bi-eye${visible ? '' : '-slash'}"></i>`; });
+  form.addEventListener('submit', async event => { event.preventDefault(); const email = form.email.value.trim(); const pass = password.value; if (!email || !pass) return showAlert('#formAlert', 'Ingresa tu correo y contraseña.'); setLoading(button, true); try { const data = await apiFetch('/auth/login', { method: 'POST', body: JSON.stringify({ email, password: pass }), auth: false }); saveUser(data.usuario); if (data.requiere_mfa) { saveTemporaryToken(data.token_temporal); window.location.href = 'mfa.html'; } else { saveToken(data.token); window.location.href = 'dashboard.html'; } } catch (error) { const remaining = error.data?.intentos_restantes; showAlert('#formAlert', `${error.message}${remaining !== undefined ? ` Te quedan ${remaining} intentos.` : ''}`); } finally { setLoading(button, false); } });
+});
